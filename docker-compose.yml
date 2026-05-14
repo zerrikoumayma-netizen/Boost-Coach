@@ -1,0 +1,52 @@
+services:
+  mysql:
+    build:
+      context: ./database
+    image: boostcoach-mysql
+    container_name: boostcoach-mysql
+    environment:
+      MYSQL_DATABASE: sport_db
+      MYSQL_USER: reda
+      MYSQL_PASSWORD: reda123
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  backend:
+    build:
+      context: ./backend
+    image: boostcoach-backend
+    container_name: boostcoach-backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sport_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Africa/Casablanca&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: reda
+      SPRING_DATASOURCE_PASSWORD: reda123
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8081/api
+    image: boostcoach-frontend
+    container_name: boostcoach-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  mysql_data:

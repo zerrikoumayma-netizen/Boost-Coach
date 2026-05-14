@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decathlon Sport Buddy</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #eef2f7;
+            color: #333;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #0082c3 0%, #005a8e 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header h1 { font-size: 1.3rem; font-weight: 600; letter-spacing: 0.3px; }
+        header .subtitle { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
+
+        #userBadge {
+            margin-left: auto;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            display: none;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ── TABS ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: white;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            position: sticky;
+            top: 62px;
+            z-index: 99;
+        }
+        .tab {
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            color: #666;
+            border: none;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .tab:hover { background: #f0f4f8; color: #0082c3; }
+        .tab.active { background: #0082c3; color: white; }
+
+        /* ── CONTAINER ── */
+        .container { max-width: 960px; margin: 1.5rem auto; padding: 0 1rem; }
+
+        /* ── PANELS ── */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* ── CARD ── */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            border: 1px solid #e8edf2;
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0082c3;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f0f4f8;
+            padding-bottom: 0.8rem;
+        }
+
+        /* ── FORM ELEMENTS ── */
+        input, select {
+            width: 100%;
+            padding: 0.6rem 0.9rem;
+            border: 1.5px solid #dde3ea;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            font-size: 0.92rem;
+            transition: border-color 0.2s;
+            outline: none;
+            background: #fafbfc;
+        }
+        input:focus, select:focus { border-color: #0082c3; background: white; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #0082c3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.55rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: #006aa3; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn.green { background: #2e7d32; }
+        .btn.green:hover { background: #1b5e20; }
+        .btn.orange { background: #e65100; }
+        .btn.orange:hover { background: #bf360c; }
+        .btn.gray { background: #546e7a; }
+        .btn.gray:hover { background: #37474f; }
+        .btn.outline {
+            background: transparent;
+            border: 1.5px solid #0082c3;
+            color: #0082c3;
+        }
+        .btn.outline:hover { background: #e3f2fd; }
+
+        /* ── STATUS ── */
+        .status {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            margin-top: 0.8rem;
+            font-size: 0.88rem;
+            display: none;
+            border-left: 4px solid;
+        }
+        .status.ok { background: #e8f5e9; color: #1b5e20; border-color: #43a047; }
+        .status.err { background: #ffebee; color: #b71c1c; border-color: #ef5350; }
+
+        /* ── TOKEN BOX ── */
+        .token-box {
+            background: #f1f8e9;
+            border: 1px solid #aed581;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            font-size: 0.75rem;
+            word-break: break-all;
+            margin-top: 1rem;
+            color: #33691e;
+            display: none;
+        }
+
+        /* ── GRID ── */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+        /* ── STAT CARDS ── */
+        .stat-card {
+            background: linear-gradient(135deg, #0082c3, #005a8e);
+            color: white;
+            border-radius: 10px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+        .stat-card .stat-num { font-size: 2rem; font-weight: 700; }
+        .stat-card .stat-label { font-size: 0.78rem; opacity: 0.85; margin-top: 4px; }
+
+        /* ── TABLE ── */
+        .table-wrap { overflow-x: auto; margin-top: 1rem; border-radius: 8px; border: 1px solid #e8edf2; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+        th { background: #0082c3; color: white; padding: 10px 12px; text-align: left; font-weight: 500; }
+        th:first-child { border-radius: 8px 0 0 0; }
+        th:last-child { border-radius: 0 8px 0 0; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f0f4f8; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f7fafc; }
+
+        /* ── BADGE ── */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.76rem;
+            font-weight: 500;
+            background: #e3f2fd;
+            color: #1565c0;
+            margin: 2px;
+        }
+        .badge.green { background: #e8f5e9; color: #2e7d32; }
+        .badge.orange { background: #fff3e0; color: #e65100; }
+        .badge.purple { background: #f3e5f5; color: #6a1b9a; }
+        .badge.red { background: #ffebee; color: #c62828; }
+
+        /* ── RESPONSE BOX ── */
+        .response {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.83rem;
+            white-space: pre-wrap;
+            max-height: 280px;
+            overflow-y: auto;
+            display: none;
+            font-family: monospace;
+            color: #444;
+        }
+
+        /* ── SEARCH BAR ── */
+        .search-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        .search-row input { margin-bottom: 0; flex: 1; }
+
+        /* ── SECTION LABEL ── */
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #546e7a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.6rem;
+        }
+
+        /* ── DIVIDER ── */
+        .divider { height: 1px; background: #eef2f7; margin: 1rem 0; }
+
+        /* ── EMPTY STATE ── */
+        .empty {
+            text-align: center;
+            padding: 2rem;
+            color: #9aa5b4;
+            font-size: 0.9rem;
+        }
+
+        /* ── SPINNER ── */
+        .spinner {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 4px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 600px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .tabs { gap: 2px; }
+            .tab { padding: 6px 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════ HEADER -->
+<header>
+    <svg width="36" height="36" viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r="18" fill="white" opacity="0.15"/>
+        <circle cx="18" cy="18" r="14" fill="white" opacity="0.1"/>
+        <text x="8" y="24" font-size="15" fill="white" font-weight="bold" font-family="Arial">DP</text>
+    </svg>
+    <div>
+        <div style="font-size:1.25rem;font-weight:700;">Decathlon Sport Buddy</div>
+        <div class="subtitle">Plateforme de démonstration</div>
+    </div>
+    <span id="userBadge"></span>
+</header>
+
+<!-- ══════════════════════════════════════════════════════ TABS -->
+<div class="tabs">
+    <button class="tab active" onclick="showTab('auth')">🔐 Auth</button>
+    <button class="tab" onclick="showTab('products')">🛒 Produits</button>
+    <button class="tab" onclick="showTab('programs')">🏋️ Programmes</button>
+    <button class="tab" onclick="showTab('events')">📅 Événements</button>
+    <button class="tab" onclick="showTab('profile')">👤 Profil</button>
+    <button class="tab" onclick="showTab('admin')">⚙️ Admin</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ CONTAINER -->
+<div class="container">
+
+    <!-- ─── AUTH ─── -->
+    <div class="panel active" id="panel-auth">
+        <div class="card">
+            <div class="card-title">🔐 Connexion</div>
+            <div class="grid-2">
+                <div>
+                    <div class="section-label">Connexion rapide</div>
+                    <input id="loginUser" placeholder="Nom d'utilisateur" value="admin"/>
+                    <input id="loginPass" type="password" placeholder="Mot de passe" value="admin123"/>
+                    <button class="btn" onclick="doLogin()">Se connecter</button>
+                    <div class="status" id="loginStatus"></div>
+                </div>
+                <div>
+                    <div class="section-label">Créer un compte</div>
+                    <input id="regUser" placeholder="Nom d'utilisateur"/>
+                    <input id="regEmail" placeholder="Email"/>
+                    <input id="regPass" type="password" placeholder="Mot de passe (6+ chars)"/>
+                    <button class="btn green" onclick="doRegister()">S'inscrire</button>
+                    <div class="status" id="regStatus"></div>
+                </div>
+            </div>
+            <div class="token-box" id="tokenBox">
+                <strong>🔑 JWT Token :</strong><br>
+                <span id="tokenText"></span>
+            </div>
+        </div>
+
+        <div class="card" id="infoCard" style="display:none">
+            <div class="card-title">✅ Session active</div>
+            <div class="grid-3" id="sessionStats"></div>
+        </div>
+    </div>
+
+    <!-- ─── PRODUITS ─── -->
+    <div class="panel" id="panel-products">
+        <div class="card">
+            <div class="card-title">🛒 Catalogue Produits</div>
+            <div class="search-row">
+                <input id="searchProduct" placeholder="Rechercher un produit..."/>
+                <button class="btn" onclick="searchProducts()">Rechercher</button>
+                <button class="btn gray" onclick="loadProducts()">Tous</button>
+            </div>
+            <div style="margin-bottom:0.8rem;">
+                <button class="btn outline" onclick="loadByCategory('Cyclisme')">🚴 Cyclisme</button>
+                <button class="btn outline" onclick="loadByCategory('Running')">🏃 Running</button>
+                <button class="btn outline" onclick="loadByCategory('Musculation')">💪 Musculation</button>
+                <button class="btn outline" onclick="loadByCategory('Yoga & Pilates')">🧘 Yoga</button>
+            </div>
+            <div id="productsResp" class="response"></div>
+        </div>
+    </div>
+
+    <!-- ─── PROGRAMMES ─── -->
+    <div class="panel" id="panel-programs">
+        <div class="card">
+            <div class="card-title">🏋️ Programmes d'entraînement</div>
+            <button class="btn" onclick="loadPrograms()">Tous les programmes</button>
+            <button class="btn outline" onclick="loadPrograms('perte de poids')">🔥 Perte de poids</button>
+            <button class="btn outline" onclick="loadPrograms('musculation')">💪 Musculation</button>
+            <button class="btn outline" onclick="loadPrograms('endurance')">🏃 Endurance</button>
+            <button class="btn outline" onclick="loadPrograms('flexibilité')">🧘 Flexibilité</button>
+            <div id="programsResp" class="response"></div>
+        </div>
+    </div>
+
+    <!-- ─── ÉVÉNEMENTS ─── -->
+    <div class="panel" id="panel-events">
+        <div class="card">
+            <div class="card-title">📅 Événements sportifs</div>
+            <button class="btn" onclick="loadEvents()">Tous les événements</button>
+            <button class="btn outline" onclick="loadEvents(true)">⏭️ À venir</button>
+            <button class="btn outline" onclick="loadEventsByType('MARATHON')">🏅 Marathons</button>
+            <button class="btn outline" onclick="loadEventsByType('TOURNAMENT')">🏆 Tournois</button>
+            <button class="btn outline" onclick="loadEventsByType('WORKSHOP')">📚 Ateliers</button>
+            <div id="eventsResp" class="response"></div>
+        </div>
+    </div>
+
+    <!-- ─── PROFIL ─── -->
+    <div class="panel" id="panel-profile">
+        <div class="card">
+            <div class="card-title">👤 Mes informations</div>
+            <button class="btn" onclick="loadMe()">Voir mes infos</button>
+            <button class="btn outline" onclick="loadProfile()">Profil sportif</button>
+            <div id="profileResp" class="response"></div>
+        </div>
+        <div class="card">
+            <div class="card-title">🏋️ Mes séances</div>
+            <button class="btn" onclick="loadSessions()">Mes séances</button>
+            <button class="btn outline" onclick="loadSessionStats()">Statistiques</button>
+            <div id="sessionsResp" class="response"></div>
+        </div>
+    </div>
+
+    <!-- ─── ADMIN ─── -->
+    <div class="panel" id="panel-admin">
+        <div class="card">
+            <div class="card-title">⚙️ Dashboard Administrateur</div>
+            <button class="btn" onclick="loadDashboard()">📊 Statistiques globales</button>
+            <button class="btn outline" onclick="loadUsers()">👥 Tous les utilisateurs</button>
+            <div id="adminResp" class="response"></div>
+            <div id="statsGrid" style="margin-top:1rem;"></div>
+        </div>
+    </div>
+
+</div><!-- /container -->
+
+<script>
+    const API = 'http://localhost:8081/api';
+    let token = '';
+    let currentUser = null;
+
+    /* ── TAB NAVIGATION ── */
+    function showTab(name) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('panel-' + name).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    /* ── HEADERS ── */
+    function h() {
+        return {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+        };
+    }
+
+    /* ── DISPLAY HELPERS ── */
+    function showResp(id, html) {
+        const el = document.getElementById(id);
+        el.style.display = 'block';
+        el.innerHTML = html;
+    }
+
+    function showJSON(id, data) {
+        showResp(id, JSON.stringify(data, null, 2));
+    }
+
+    function showStatus(id, msg, ok) {
+        const el = document.getElementById(id);
+        el.style.display = 'block';
+        el.className = 'status ' + (ok ? 'ok' : 'err');
+        el.textContent = msg;
+    }
+
+    function tableWrap(html) {
+        return '<div class="table-wrap">' + html + '</div>';
+    }
+
+    function levelBadge(lvl) {
+        const map = { BEGINNER:'green', INTERMEDIATE:'orange', ADVANCED:'red' };
+        return `<span class="badge ${map[lvl]||''}">${lvl||'-'}</span>`;
+    }
+
+    function typeBadge(type) {
+        const map = { MARATHON:'purple', TOURNAMENT:'orange', WORKSHOP:'green', OTHER:'' };
+        return `<span class="badge ${map[type]||''}">${type||'-'}</span>`;
+    }
+
+    /* ── AUTH ── */
+    async function doLogin() {
+        const username = document.getElementById('loginUser').value.trim();
+        const password = document.getElementById('loginPass').value.trim();
+        if (!username || !password) { showStatus('loginStatus','⚠️ Remplis tous les champs',false); return; }
+        try {
+            const r = await fetch(API+'/auth/login', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const data = await r.json();
+            if (r.ok) {
+                token = data.token;
+                currentUser = data;
+                document.getElementById('tokenBox').style.display = 'block';
+                document.getElementById('tokenText').textContent = token;
+                const badge = document.getElementById('userBadge');
+                badge.style.display = 'inline';
+                badge.textContent = data.username + ' · ' + [...data.roles].join(', ') + ' · ' + data.loyaltyPoints + ' pts';
+                showStatus('loginStatus', '✅ Connecté en tant que ' + data.username, true);
+                document.getElementById('infoCard').style.display = 'block';
+                document.getElementById('sessionStats').innerHTML = `
+          <div class="stat-card"><div class="stat-num">${data.loyaltyPoints}</div><div class="stat-label">Points fidélité</div></div>
+          <div class="stat-card" style="background:linear-gradient(135deg,#2e7d32,#1b5e20)"><div class="stat-num">${[...data.roles].length}</div><div class="stat-label">Rôles</div></div>
+          <div class="stat-card" style="background:linear-gradient(135deg,#e65100,#bf360c)"><div class="stat-num">✓</div><div class="stat-label">Authentifié</div></div>
+        `;
+            } else {
+                showStatus('loginStatus', '❌ ' + (data.message || 'Identifiants incorrects'), false);
+            }
+        } catch(e) {
+            showStatus('loginStatus', '❌ Serveur injoignable — vérifiez que Spring Boot tourne sur le port 8081', false);
+        }
+    }
+
+    async function doRegister() {
+        const username = document.getElementById('regUser').value.trim();
+        const email    = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPass').value.trim();
+        if (!username || !email || !password) { showStatus('regStatus','⚠️ Remplis tous les champs',false); return; }
+        try {
+            const r = await fetch(API+'/auth/register', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({username, email, password})
+            });
+            const data = await r.json();
+            showStatus('regStatus', r.ok ? '✅ Compte créé avec succès !' : '❌ ' + (data.message||'Erreur'), r.ok);
+        } catch(e) { showStatus('regStatus','❌ Serveur injoignable',false); }
+    }
+
+    /* ── PRODUCTS ── */
+    async function loadProducts() {
+        try {
+            const r = await fetch(API+'/products', { headers: h() });
+            const data = await r.json();
+            r.ok ? renderProducts(data) : showResp('productsResp', '❌ ' + (data.message||'Erreur'));
+        } catch(e) { showResp('productsResp','❌ Serveur injoignable'); }
+    }
+
+    async function searchProducts() {
+        const q = document.getElementById('searchProduct').value.trim();
+        if (!q) return loadProducts();
+        try {
+            const r = await fetch(API+'/products?search='+encodeURIComponent(q), { headers: h() });
+            const data = await r.json();
+            r.ok ? renderProducts(data) : showResp('productsResp','❌ Erreur');
+        } catch(e) { showResp('productsResp','❌ Serveur injoignable'); }
+    }
+
+    async function loadByCategory(cat) {
+        try {
+            const r = await fetch(API+'/products?category='+encodeURIComponent(cat), { headers: h() });
+            const data = await r.json();
+            r.ok ? renderProducts(data) : showResp('productsResp','❌ Erreur');
+        } catch(e) { showResp('productsResp','❌ Serveur injoignable'); }
+    }
+
+    function renderProducts(data) {
+        if (!data.length) { showResp('productsResp','<div class="empty">Aucun produit trouvé.</div>'); return; }
+        const rows = data.map(p => {
+            const stock = Object.entries(p.stockByCity||{})
+                .map(([c,q]) => `<span class="badge ${q>0?'green':'red'}">${c}: ${q}</span>`)
+                .join(' ') || '-';
+            return `<tr>
+        <td><strong>${p.name}</strong></td>
+        <td><span class="badge">${p.category||'-'}</span></td>
+        <td><strong style="color:#0082c3">${Number(p.price).toFixed(2)} MAD</strong></td>
+        <td>${stock}</td>
+      </tr>`;
+        }).join('');
+        showResp('productsResp', tableWrap(`<table>
+      <tr><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Stock par ville</th></tr>
+      ${rows}</table>`));
+    }
+
+    /* ── PROGRAMS ── */
+    async function loadPrograms(objective) {
+        const url = objective
+            ? API+'/coaching/programs?objective='+encodeURIComponent(objective)
+            : API+'/coaching/programs';
+        try {
+            const r = await fetch(url, { headers: h() });
+            const data = await r.json();
+            r.ok ? renderPrograms(data) : showResp('programsResp','❌ Erreur');
+        } catch(e) { showResp('programsResp','❌ Serveur injoignable'); }
+    }
+
+    function renderPrograms(data) {
+        if (!data.length) { showResp('programsResp','<div class="empty">Aucun programme.</div>'); return; }
+        const rows = data.map(p => `<tr>
+      <td><strong>${p.title}</strong></td>
+      <td><span class="badge">${p.category||'-'}</span></td>
+      <td>${levelBadge(p.level)}</td>
+      <td>${p.durationWeeks} sem.</td>
+      <td><span class="badge orange">${p.objective||'-'}</span></td>
+    </tr>`).join('');
+        showResp('programsResp', tableWrap(`<table>
+      <tr><th>Titre</th><th>Catégorie</th><th>Niveau</th><th>Durée</th><th>Objectif</th></tr>
+      ${rows}</table>`));
+    }
+
+    /* ── EVENTS ── */
+    async function loadEvents(upcomingOnly) {
+        const url = upcomingOnly ? API+'/events?upcomingOnly=true' : API+'/events';
+        try {
+            const r = await fetch(url, { headers: h() });
+            const data = await r.json();
+            r.ok ? renderEvents(data) : showResp('eventsResp','❌ Erreur');
+        } catch(e) { showResp('eventsResp','❌ Serveur injoignable'); }
+    }
+
+    async function loadEventsByType(type) {
+        try {
+            const r = await fetch(API+'/events?type='+type, { headers: h() });
+            const data = await r.json();
+            r.ok ? renderEvents(data) : showResp('eventsResp','❌ Erreur');
+        } catch(e) { showResp('eventsResp','❌ Serveur injoignable'); }
+    }
+
+    function renderEvents(data) {
+        if (!data.length) { showResp('eventsResp','<div class="empty">Aucun événement.</div>'); return; }
+        const today = new Date().toISOString().split('T')[0];
+        const rows = data.map(e => {
+            const past = e.eventDate < today;
+            return `<tr>
+        <td><strong>${e.title}</strong></td>
+        <td>${typeBadge(e.type)}</td>
+        <td><span class="badge ${past?'red':'green'}">${e.eventDate}</span></td>
+        <td>${e.city||'-'}</td>
+        <td>${e.registrationUrl ? `<a href="${e.registrationUrl}" target="_blank" style="color:#0082c3">S'inscrire</a>` : '-'}</td>
+      </tr>`;
+        }).join('');
+        showResp('eventsResp', tableWrap(`<table>
+      <tr><th>Titre</th><th>Type</th><th>Date</th><th>Ville</th><th>Lien</th></tr>
+      ${rows}</table>`));
+    }
+
+    /* ── PROFILE ── */
+    async function loadMe() {
+        try {
+            const r = await fetch(API+'/users/me', { headers: h() });
+            const data = await r.json();
+            if (r.ok) {
+                showResp('profileResp', tableWrap(`<table>
+          <tr><th>Champ</th><th>Valeur</th></tr>
+          <tr><td>ID</td><td>${data.id}</td></tr>
+          <tr><td>Username</td><td><strong>${data.username}</strong></td></tr>
+          <tr><td>Email</td><td>${data.email}</td></tr>
+          <tr><td>Rôles</td><td>${[...data.roles].map(r=>`<span class="badge">${r}</span>`).join('')}</td></tr>
+          <tr><td>Points fidélité</td><td><strong style="color:#0082c3">${data.loyaltyPoints}</strong></td></tr>
+        </table>`));
+            } else { showResp('profileResp','❌ ' + (data.message||'Connectez-vous d\'abord')); }
+        } catch(e) { showResp('profileResp','❌ Serveur injoignable'); }
+    }
+
+    async function loadProfile() {
+        try {
+            const r = await fetch(API+'/users/me/profile', { headers: h() });
+            const data = await r.json();
+            if (r.ok) {
+                showResp('profileResp', tableWrap(`<table>
+          <tr><th>Champ</th><th>Valeur</th></tr>
+          <tr><td>Âge</td><td>${data.age}</td></tr>
+          <tr><td>Ville</td><td>${data.city||'-'}</td></tr>
+          <tr><td>Niveau</td><td>${levelBadge(data.level)}</td></tr>
+          <tr><td>Objectifs</td><td>${[...(data.objectives||[])].map(o=>`<span class="badge orange">${o}</span>`).join(' ')||'-'}</td></tr>
+        </table>`));
+            } else { showResp('profileResp','❌ Pas encore de profil sportif'); }
+        } catch(e) { showResp('profileResp','❌ Serveur injoignable'); }
+    }
+
+    async function loadSessions() {
+        try {
+            const r = await fetch(API+'/coaching/sessions', { headers: h() });
+            const data = await r.json();
+            if (r.ok) {
+                if (!data.length) { showResp('sessionsResp','<div class="empty">Aucune séance.</div>'); return; }
+                const rows = data.map(s => `<tr>
+          <td>${s.id}</td>
+          <td>${s.sessionLabel||'-'}</td>
+          <td><span class="badge ${s.done?'green':'orange'}">${s.done?'✅ Terminée':'⏳ En cours'}</span></td>
+          <td>${s.completedAt||'-'}</td>
+        </tr>`).join('');
+                showResp('sessionsResp', tableWrap(`<table>
+          <tr><th>ID</th><th>Label</th><th>Statut</th><th>Terminée le</th></tr>
+          ${rows}</table>`));
+            } else { showResp('sessionsResp','❌ ' + (data.message||'Erreur')); }
+        } catch(e) { showResp('sessionsResp','❌ Serveur injoignable'); }
+    }
+
+    async function loadSessionStats() {
+        try {
+            const r = await fetch(API+'/coaching/sessions/stats', { headers: h() });
+            const data = await r.json();
+            if (r.ok) {
+                showResp('sessionsResp', `
+          <div class="grid-2" style="gap:1rem;margin-top:0.5rem;">
+            <div class="stat-card"><div class="stat-num">${data.completedSessions}</div><div class="stat-label">Séances complétées</div></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#2e7d32,#1b5e20)"><div class="stat-num">${data.loyaltyPoints}</div><div class="stat-label">Points fidélité</div></div>
+          </div>`);
+            } else { showResp('sessionsResp','❌ Connectez-vous d\'abord'); }
+        } catch(e) { showResp('sessionsResp','❌ Serveur injoignable'); }
+    }
+
+    /* ── ADMIN ── */
+    async function loadDashboard() {
+        try {
+            const r = await fetch(API+'/admin/dashboard', { headers: h() });
+            const data = await r.json();
+            if (r.ok) {
+                document.getElementById('statsGrid').innerHTML = `
+          <div class="grid-3" style="gap:1rem">
+            <div class="stat-card"><div class="stat-num">${data.totalUsers}</div><div class="stat-label">Utilisateurs</div></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#2e7d32,#1b5e20)"><div class="stat-num">${data.totalProducts}</div><div class="stat-label">Produits</div></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#e65100,#bf360c)"><div class="stat-num">${data.totalEvents}</div><div class="stat-label">Événements</div></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#6a1b9a,#4a148c)"><div class="stat-num">${data.totalSessions}</div><div class="stat-label">Séances totales</div></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#00838f,#006064)"><div class="stat-num">${data.completedSessions}</div><div class="stat-label">Séances complétées</div></div>
+            <div class="stat-card" style="background:linear-gradient(135deg,#37474f,#263238)"><div class="stat-num">${Math.round(data.completedSessions/Math.max(data.totalSessions,1)*100)}%</div><div class="stat-label">Taux complétion</div></div>
+          </div>`;
+                document.getElementById('adminResp').style.display = 'none';
+            } else {
+                showResp('adminResp','❌ Accès refusé — rôle ADMIN requis');
+                document.getElementById('statsGrid').innerHTML = '';
+            }
+        } catch(e) { showResp('adminResp','❌ Serveur injoignable'); }
+    }
+
+    async function loadUsers() {
+        try {
+            const r = await fetch(API+'/admin/users', { headers: h() });
+            const data = await r.json();
+            if (r.ok) {
+                document.getElementById('statsGrid').innerHTML = '';
+                const rows = data.map(u => `<tr>
+          <td>${u.id}</td>
+          <td><strong>${u.username}</strong></td>
+          <td>${u.email}</td>
+          <td>${[...u.roles].map(role => `<span class="badge ${role.includes('ADMIN')?'red':''}">${role}</span>`).join('')}</td>
+          <td><strong style="color:#0082c3">${u.loyaltyPoints} pts</strong></td>
+        </tr>`).join('');
+                showResp('adminResp', tableWrap(`<table>
+          <tr><th>ID</th><th>Username</th><th>Email</th><th>Rôles</th><th>Points</th></tr>
+          ${rows}</table>`));
+            } else { showResp('adminResp','❌ Accès refusé — rôle ADMIN requis'); }
+        } catch(e) { showResp('adminResp','❌ Serveur injoignable'); }
+    }
+</script>
+</body>
+</html>

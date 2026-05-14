@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decathlon Sport Buddy — Inscription</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #0a0f1e;
+    --blue:   #0082c3;
+    --bright: #00d4ff;
+    --white:  #f0f4fa;
+    --muted:  #7a8aaa;
+    --glass:  rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.1);
+    --error:  #ff4d6d;
+    --success:#00e5a0;
+    --accent: #00e5a0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ── RIGHT PANEL (hero) ── */
+  .right {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .right-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(225deg, #050a14 0%, #0a1a30 50%, #006644 150%);
+  }
+  .right-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 70%, rgba(0,229,160,0.15) 0%, transparent 60%);
+  }
+
+  .stripe-grid {
+    position: absolute; inset: 0; opacity: 0.05;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(0,229,160,1) 0,
+      rgba(0,229,160,1) 1px,
+      transparent 0,
+      transparent 50%
+    );
+    background-size: 40px 40px;
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    padding: 2rem; text-align: center;
+  }
+  .hero-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.05); }
+  }
+  .hero-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 4px;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+  .hero-accent { color: var(--accent); }
+  .hero-sub { font-size: 0.9rem; color: rgba(255,255,255,0.45); max-width: 280px; margin: 0 auto 2.5rem; line-height: 1.6; }
+
+  .perks { display: flex; flex-direction: column; gap: 0.8rem; text-align: left; }
+  .perk {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(0,229,160,0.07);
+    border: 1px solid rgba(0,229,160,0.15);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+  .perk-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .perk-text { color: rgba(255,255,255,0.7); }
+  .perk-text strong { color: var(--accent); }
+
+  /* ── LEFT PANEL ── */
+  .left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 2.5rem;
+    align-self: flex-start;
+  }
+  .brand-mark {
+    width: 44px; height: 44px;
+    background: var(--blue);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; color: white;
+  }
+  .brand-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; }
+  .brand-sub { font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .form-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    backdrop-filter: blur(20px);
+    position: relative;
+  }
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 30px; right: 30px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    border-radius: 2px;
+  }
+
+  .form-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 2px; margin-bottom: 0.3rem; }
+  .form-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .field { margin-bottom: 1.1rem; position: relative; }
+  .field label {
+    display: block; font-size: 0.75rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field input::placeholder { color: rgba(255,255,255,0.2); }
+  .field input:focus { border-color: var(--accent); background: rgba(0,229,160,0.05); }
+  .field input.invalid { border-color: var(--error); }
+  .field-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; display: none; }
+  .field-hint.show { display: block; }
+  .field-hint.err { color: #ff8fa3; }
+
+  /* password strength */
+  .strength-bar {
+    display: flex; gap: 4px; margin-top: 6px;
+  }
+  .strength-seg {
+    flex: 1; height: 3px; border-radius: 2px;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.3s;
+  }
+  .strength-seg.weak   { background: var(--error); }
+  .strength-seg.medium { background: #ffaa00; }
+  .strength-seg.strong { background: var(--accent); }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #00b378, #009060);
+    color: white;
+    border: none; border-radius: 10px;
+    padding: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    margin-top: 0.5rem;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,179,120,0.35); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .separator {
+    display: flex; align-items: center; gap: 12px;
+    margin: 1.2rem 0; color: var(--muted); font-size: 0.8rem;
+  }
+  .separator::before, .separator::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .btn-login {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--white); border-radius: 10px;
+    padding: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    text-decoration: none; display: block; text-align: center;
+  }
+  .btn-login:hover { border-color: var(--bright); color: var(--bright); background: rgba(0,212,255,0.05); }
+
+  .alert {
+    padding: 0.7rem 1rem; border-radius: 8px;
+    font-size: 0.85rem; margin-top: 1rem;
+    display: none; border-left: 3px solid;
+  }
+  .alert.err { background: rgba(255,77,109,0.12); border-color: var(--error); color: #ff8fa3; }
+  .alert.ok  { background: rgba(0,229,160,0.12); border-color: var(--accent); color: var(--accent); }
+
+  .bg-circle {
+    position: fixed; border-radius: 50%;
+    filter: blur(80px); pointer-events: none; opacity: 0.1;
+  }
+  .c1 { width: 400px; height: 400px; background: #00e5a0; bottom: -150px; right: -100px; }
+  .c2 { width: 250px; height: 250px; background: #0082c3; top: -80px; right: 300px; }
+
+  @media (max-width: 768px) {
+    .right { display: none; }
+    .left { padding: 2rem 1.5rem; align-items: center; }
+    .brand { align-self: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-circle c1"></div>
+<div class="bg-circle c2"></div>
+
+<!-- ── LEFT: FORM ── -->
+<div class="left">
+  <div class="brand">
+    <div class="brand-mark">DP</div>
+    <div>
+      <div class="brand-name">Sport Buddy</div>
+      <div class="brand-sub">Decathlon Platform</div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title">Inscription</div>
+    <div class="form-subtitle">Créez votre compte gratuitement</div>
+
+    <div class="field">
+      <label>Nom d'utilisateur</label>
+      <input id="regUser" type="text" placeholder="ex. john_sport" autocomplete="username"/>
+      <div class="field-hint" id="userHint"></div>
+    </div>
+    <div class="field">
+      <label>Adresse email</label>
+      <input id="regEmail" type="email" placeholder="vous@sport.ma" autocomplete="email"/>
+      <div class="field-hint" id="emailHint"></div>
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input id="regPass" type="password" placeholder="6 caractères minimum" autocomplete="new-password" oninput="checkStrength(this.value)"/>
+      <div class="strength-bar">
+        <div class="strength-seg" id="s1"></div>
+        <div class="strength-seg" id="s2"></div>
+        <div class="strength-seg" id="s3"></div>
+      </div>
+      <div class="field-hint" id="passHint"></div>
+    </div>
+
+    <button class="btn-primary" onclick="doRegister()">Créer mon compte</button>
+
+    <div class="alert" id="regAlert"></div>
+
+    <div class="separator">déjà inscrit ?</div>
+    <a href="login.html" class="btn-login">Se connecter</a>
+  </div>
+</div>
+
+<!-- ── RIGHT: HERO ── -->
+<div class="right">
+  <div class="right-bg"></div>
+  <div class="stripe-grid"></div>
+  <div class="hero-content">
+    <div class="hero-icon">🏅</div>
+    <div class="hero-text">
+      Rejoignez la<br><span class="hero-accent">communauté</span>
+    </div>
+    <div class="hero-sub">Des milliers de sportifs suivent leurs performances, gagnent des points et progressent ensemble.</div>
+    <div class="perks">
+      <div class="perk">
+        <span class="perk-icon">🎯</span>
+        <div class="perk-text">Programmes adaptés à <strong>votre niveau</strong></div>
+      </div>
+      <div class="perk">
+        <span class="perk-icon">⭐</span>
+        <div class="perk-text">Gagnez <strong>10 pts de fidélité</strong> par séance complétée</div>
+      </div>
+      <div class="perk">
+        <span class="perk-icon">📍</span>
+        <div class="perk-text">Événements sportifs <strong>près de chez vous</strong></div>
+      </div>
+      <div class="perk">
+        <span class="perk-icon">🛒</span>
+        <div class="perk-text">Accès au catalogue <strong>Decathlon</strong> en temps réel</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:8081/api';
+
+function checkStrength(val) {
+  const segs = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
+  segs.forEach(s => { s.className = 'strength-seg'; });
+  if (!val) return;
+  if (val.length >= 6) segs[0].classList.add('weak');
+  if (val.length >= 8) segs[1].classList.add('medium');
+  if (val.length >= 10 && /[A-Z]/.test(val) && /[0-9]/.test(val)) segs[2].classList.add('strong');
+  else if (val.length >= 8) segs[1].classList.add('medium');
+}
+
+async function doRegister() {
+  const username = document.getElementById('regUser').value.trim();
+  const email    = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPass').value.trim();
+
+  clearHints();
+
+  let valid = true;
+  if (!username || username.length < 3) { showHint('userHint', 'Minimum 3 caractères', 'err'); valid = false; }
+  if (!email || !email.includes('@'))   { showHint('emailHint', 'Email invalide', 'err'); valid = false; }
+  if (!password || password.length < 6) { showHint('passHint', 'Minimum 6 caractères', 'err'); valid = false; }
+  if (!valid) return;
+
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = 'Création en cours…'; btn.disabled = true;
+
+  try {
+    const r = await fetch(API + '/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password })
+    });
+    const data = await r.json();
+    if (r.ok) {
+      showAlert('✓ Compte créé ! Redirection vers la connexion…', 'ok');
+      setTimeout(() => window.location.href = 'login.html', 1500);
+    } else {
+      showAlert('❌ ' + (data.message || 'Erreur lors de l\'inscription'), 'err');
+      btn.textContent = 'Créer mon compte'; btn.disabled = false;
+    }
+  } catch(e) {
+    showAlert('❌ Serveur injoignable (port 8081)', 'err');
+    btn.textContent = 'Créer mon compte'; btn.disabled = false;
+  }
+}
+
+function showHint(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'field-hint show ' + type;
+  el.previousElementSibling.classList.add('invalid');
+}
+function clearHints() {
+  ['userHint','emailHint','passHint'].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = 'field-hint';
+    el.textContent = '';
+  });
+  document.querySelectorAll('.field input').forEach(i => i.classList.remove('invalid'));
+  document.getElementById('regAlert').style.display = 'none';
+}
+function showAlert(msg, type) {
+  const el = document.getElementById('regAlert');
+  el.textContent = msg; el.className = 'alert ' + type;
+  el.style.display = 'block';
+}
+</script>
+</body>
+</html>

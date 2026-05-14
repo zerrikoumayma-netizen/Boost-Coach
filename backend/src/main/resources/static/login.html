@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decathlon Sport Buddy — Connexion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #0a0f1e;
+    --blue:   #0082c3;
+    --bright: #00d4ff;
+    --white:  #f0f4fa;
+    --muted:  #7a8aaa;
+    --glass:  rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.1);
+    --error:  #ff4d6d;
+    --success:#00e5a0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 3.5rem;
+    align-self: flex-start;
+  }
+  .brand-mark {
+    width: 44px; height: 44px;
+    background: var(--blue);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: white;
+  }
+  .brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+  .brand-sub { font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .form-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    backdrop-filter: blur(20px);
+    position: relative;
+  }
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 30px; right: 30px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--bright), transparent);
+    border-radius: 2px;
+  }
+
+  .form-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+  .form-subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .field { margin-bottom: 1.2rem; }
+  .field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .field input::placeholder { color: rgba(255,255,255,0.2); }
+  .field input:focus {
+    border-color: var(--bright);
+    background: rgba(0,212,255,0.06);
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, var(--blue), #0060a0);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.12), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,130,195,0.4); }
+  .btn-primary:hover::after { opacity: 1; }
+  .btn-primary:active { transform: translateY(0); }
+
+  .separator {
+    display: flex; align-items: center; gap: 12px;
+    margin: 1.2rem 0;
+    color: var(--muted); font-size: 0.8rem;
+  }
+  .separator::before, .separator::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  .btn-register {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+  .btn-register:hover { border-color: var(--bright); color: var(--bright); background: rgba(0,212,255,0.05); }
+
+  .alert {
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    display: none;
+    border-left: 3px solid;
+  }
+  .alert.err { background: rgba(255,77,109,0.12); border-color: var(--error); color: #ff8fa3; }
+  .alert.ok  { background: rgba(0,229,160,0.12); border-color: var(--success); color: #00e5a0; }
+
+  /* ── RIGHT PANEL ── */
+  .right {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .right-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #050a14 0%, #0a1a30 50%, #0082c3 150%);
+  }
+  .right-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(0,212,255,0.15) 0%, transparent 60%);
+  }
+
+  .hex-grid {
+    position: absolute; inset: 0;
+    opacity: 0.07;
+    background-image:
+      repeating-linear-gradient(60deg, rgba(0,212,255,1) 0 1px, transparent 0 60px),
+      repeating-linear-gradient(-60deg, rgba(0,212,255,1) 0 1px, transparent 0 60px),
+      repeating-linear-gradient(0deg, rgba(0,212,255,1) 0 1px, transparent 0 60px);
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 2rem;
+  }
+  .hero-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 9rem;
+    line-height: 0.9;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,212,255,0.3);
+    letter-spacing: -4px;
+    margin-bottom: 1rem;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .hero-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .hero-sub { font-size: 0.9rem; color: rgba(255,255,255,0.5); max-width: 260px; margin: 0 auto; }
+
+  .stats-row {
+    display: flex; gap: 2rem;
+    margin-top: 3rem;
+    justify-content: center;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--bright);
+    line-height: 1;
+  }
+  .stat-lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── BG SHAPES ── */
+  .bg-circle {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.12;
+  }
+  .c1 { width: 500px; height: 500px; background: #0082c3; bottom: -200px; left: -100px; }
+  .c2 { width: 300px; height: 300px; background: #00d4ff; top: -100px; left: 200px; }
+
+  @media (max-width: 768px) {
+    .right { display: none; }
+    .left { padding: 2rem 1.5rem; align-items: center; }
+    .brand { align-self: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-circle c1"></div>
+<div class="bg-circle c2"></div>
+
+<!-- ── LEFT: FORM ── -->
+<div class="left">
+  <div class="brand">
+    <div class="brand-mark">DP</div>
+    <div>
+      <div class="brand-name">Sport Buddy</div>
+      <div class="brand-sub">Decathlon Platform</div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title">Connexion</div>
+    <div class="form-subtitle">Accédez à votre espace sportif</div>
+
+    <div class="field">
+      <label>Nom d'utilisateur</label>
+      <input id="loginUser" type="text" placeholder="ex. admin" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <button class="btn-primary" onclick="doLogin()">Se connecter</button>
+
+    <div class="alert" id="loginAlert"></div>
+
+    <div class="separator">ou</div>
+
+    <a href="register.html" class="btn-register">Créer un compte</a>
+  </div>
+</div>
+
+<!-- ── RIGHT: HERO ── -->
+<div class="right">
+  <div class="right-bg"></div>
+  <div class="hex-grid"></div>
+  <div class="hero-content">
+    <div class="hero-number">42</div>
+    <div class="hero-text">Dépassez vos limites</div>
+    <div class="hero-sub">Programmes, événements et suivi de performance dans un seul espace.</div>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-lbl">Sports</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">10</div>
+        <div class="stat-lbl">Pts / séance</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-lbl">Motivation</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:8081/api';
+
+async function doLogin() {
+  const btn = document.querySelector('.btn-primary');
+  const alert = document.getElementById('loginAlert');
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value.trim();
+
+  if (!username || !password) {
+    showAlert('Remplis tous les champs.', 'err'); return;
+  }
+
+  btn.textContent = 'Connexion en cours…';
+  btn.disabled = true;
+  alert.style.display = 'none';
+
+  try {
+    const r = await fetch(API + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await r.json();
+    if (r.ok) {
+      localStorage.setItem('sb_token', data.token);
+      localStorage.setItem('sb_user', JSON.stringify(data));
+      showAlert('✓ Bienvenue ' + data.username + ' !', 'ok');
+      setTimeout(() => window.location.href = 'dashboard.html', 700);
+    } else {
+      showAlert('❌ ' + (data.message || 'Identifiants incorrects'), 'err');
+      btn.textContent = 'Se connecter'; btn.disabled = false;
+    }
+  } catch(e) {
+    showAlert('❌ Serveur injoignable (port 8081)', 'err');
+    btn.textContent = 'Se connecter'; btn.disabled = false;
+  }
+}
+
+function showAlert(msg, type) {
+  const el = document.getElementById('loginAlert');
+  el.textContent = msg;
+  el.className = 'alert ' + type;
+  el.style.display = 'block';
+}
+
+// Allow enter key
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// If already logged in, skip to dashboard
+if (localStorage.getItem('sb_token')) window.location.href = 'dashboard.html';
+</script>
+</body>
+</html>

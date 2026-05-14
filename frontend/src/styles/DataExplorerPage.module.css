@@ -1,0 +1,392 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.sidebar {
+  border-radius: 12px;
+  padding: 16px;
+  position: sticky;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sidebarTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sidebarIcon {
+  color: var(--blue);
+  flex-shrink: 0;
+}
+
+.sidebarHeading {
+  font-size: 0.9rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.tableCount {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.searchWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: var(--muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 10px 7px 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.84rem;
+  outline: none;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.searchInput:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(240, 120, 32, 0.14);
+  background: white;
+}
+
+.tableList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tableBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.tableBtn:hover {
+  background: var(--soft);
+  border-color: var(--line);
+}
+
+.tableBtnActive {
+  background: var(--soft-blue) !important;
+  border-color: var(--blue) !important;
+}
+
+.tableBtnInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tableBtnIcon {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.tableBtnActive .tableBtnIcon {
+  color: var(--blue);
+}
+
+.tableBtnContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.tableBtnLabel {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tableBtnName {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tableBtnRight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.rowCount {
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.rowCountGreen {
+  background: #eaf9f2;
+  color: var(--green);
+}
+
+.rowCountMuted {
+  background: var(--soft);
+  color: var(--muted);
+}
+
+.tableBtnChevron {
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.tableBtn:hover .tableBtnChevron,
+.tableBtnActive .tableBtnChevron {
+  opacity: 1;
+  color: var(--blue);
+}
+
+.noResults {
+  color: var(--muted);
+  font-size: 0.84rem;
+  padding: 8px 10px;
+  margin: 0;
+}
+
+.preview {
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.previewHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.previewEyebrow {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+
+.previewTitle {
+  font-size: 1.1rem;
+  font-weight: 900;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+
+.previewMeta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.columnCount {
+  flex-shrink: 0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--soft-blue);
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+.tableWrap {
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 68vh;
+}
+
+.dataTable {
+  font-size: 0.82rem;
+}
+
+.th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--soft-blue);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.dataRow {
+  transition: background 0.1s;
+}
+
+.dataRow:hover {
+  background: var(--soft);
+}
+
+.td {
+  max-width: 260px;
+  vertical-align: top;
+}
+
+.cellNull {
+  color: var(--line);
+  font-weight: 700;
+}
+
+.cellNumber {
+  font-variant-numeric: tabular-nums;
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.cellTrue {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #eaf9f2;
+  color: var(--green);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.cellFalse {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #fff0f2;
+  color: var(--red);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.cellJson {
+  display: block;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+  background: var(--soft);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.cellText {
+  display: block;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+:global(.dark-mode) .searchInput {
+  background: var(--soft);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+:global(.dark-mode) .searchInput:focus {
+  background: var(--surface);
+}
+
+:global(.dark-mode) .tableBtn:hover {
+  background: #1a0e04;
+}
+
+:global(.dark-mode) .tableBtnActive {
+  background: #1e0c04 !important;
+}
+
+:global(.dark-mode) .dataRow:hover {
+  background: #1a0e04;
+}
+
+:global(.dark-mode) .th {
+  background: #1a0e04;
+}
+
+:global(.dark-mode) .cellJson {
+  background: #200e04;
+}
+
+:global(.dark-mode) .rowCountGreen {
+  background: #0a2e1e;
+}
+
+:global(.dark-mode) .rowCountMuted {
+  background: #200e04;
+}
+
+:global(.dark-mode) .columnCount {
+  background: var(--soft-blue);
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    max-height: none;
+  }
+
+  .tableWrap {
+    max-height: 50vh;
+  }
+}
