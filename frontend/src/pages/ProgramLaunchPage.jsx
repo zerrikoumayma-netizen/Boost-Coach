@@ -160,7 +160,7 @@ export const sessionTemplates = {
     {
       title: "Séance 3 - Consolidation",
       duration: "35 min",
-      image: "https://images.unsplash.com/photo-1526401485004-2fda9f4d61d5?auto=format&fit=crop&w=1200&q=80",
+      image: "/images/boost-gym-bg.jpg",
       tools: ["Tapis", "Gourde", "Serviette"],
       movements: [
         "Répéter les meilleurs exercices des séances précédentes.",
@@ -222,7 +222,7 @@ export default function ProgramLaunchPage() {
 
       {/* ── Launch hero ── */}
       <section className={s.launchHero}>
-        <img className={s.launchHeroImage} src={coverSrc} alt={item.title} />
+        <img className={s.launchHeroImage} src={coverSrc} alt={item.title} onError={useFallbackImage} />
 
         <div className={s.launchPanel}>
           <div className={s.metaRow}>
@@ -269,7 +269,7 @@ export default function ProgramLaunchPage() {
       <section className={s.stepsGrid}>
         {sessions.map((session, index) => (
           <article className={s.sessionCard} key={session.title}>
-            <img className={s.sessionImage} src={session.image} alt={session.title} />
+            <img className={s.sessionImage} src={session.image || FALLBACK_IMAGE} alt={session.title} onError={useFallbackImage} />
 
             <div className={s.sessionBody}>
               {/* Top badges */}
@@ -326,7 +326,7 @@ export default function ProgramLaunchPage() {
               <div className={s.exerciseGrid}>
                 {getSessionExercises(session).map((exercise) => (
                   <article className={s.exerciseCard} key={exercise.name}>
-                    <img src={exercise.image} alt={exercise.name} />
+                    <img src={exercise.image || FALLBACK_IMAGE} alt={exercise.name} onError={useFallbackImage} />
                     <div className={s.exerciseCardBody}>
                       <span className={s.exerciseName}>{exercise.name}</span>
                       <span className={s.exerciseMeta}>{exercise.repetitions} · repos {exercise.rest}</span>
@@ -398,6 +398,13 @@ const exerciseImagePool = [
   "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=900&q=80",
 ];
+
+const FALLBACK_IMAGE = "/images/boost-gym-bg.jpg";
+
+function useFallbackImage(event) {
+  if (event.currentTarget.src.endsWith(FALLBACK_IMAGE)) return;
+  event.currentTarget.src = FALLBACK_IMAGE;
+}
 
 export function getSessionExercises(session) {
   if (!session) return [];

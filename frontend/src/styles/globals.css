@@ -1,17 +1,22 @@
 :root {
   color-scheme: light;
   --blue: #F07820;
-  --blue-dark: #B55110;
-  --green: #0a9f6a;
+  --blue-dark: #c45e10;
+  --ink: #1a1a1a;
+  --muted: #888;
+  --line: rgba(240, 120, 32, 0.18);
+  --red: #e53e3e;
+  --green: #16a34a;
   --orange: #F07820;
-  --red: #d9364f;
-  --ink: #1a0f06;
-  --muted: #7a6050;
-  --line: #f0e0d0;
   --surface: #ffffff;
   --soft: rgb(254, 237, 223);
   --soft-blue: #fff0e5;
   --shadow: 0 16px 40px rgba(42, 18, 6, 0.08);
+  --glass-panel: rgba(128, 128, 128, 0.14);
+  --glass-card: rgba(148, 148, 148, 0.12);
+  --glass-card-hover: rgba(168, 168, 168, 0.18);
+  --glass-border: rgba(220, 220, 220, 0.18);
+  --glass-shadow: 0 16px 42px rgba(0, 0, 0, 0.22);
 }
 
 .dark-mode {
@@ -29,7 +34,7 @@
   --soft-blue: #2a1506;
   --shadow: 0 20px 50px rgba(0, 0, 0, 0.34);
 }
-* {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 html {
@@ -37,6 +42,7 @@ html {
 }
 body {
   margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-width: 320px;
   background: var(--soft);
   color: var(--ink);
@@ -448,16 +454,18 @@ button:disabled {
   color: var(--blue);
 }
 .app-shell {
-  display: flex;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
   min-height: 100vh;
   background: var(--soft);
   color: var(--ink);
 }
 .sidebar {
-  position: fixed;
-  inset: 0 auto 0 0;
+  position: sticky;
+  top: 0;
   z-index: 40;
   width: 280px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 18px;
@@ -538,8 +546,9 @@ button:disabled {
   margin-bottom: 10px;
 }
 .main-shell {
-  width: calc(100% - 280px);
-  margin-left: 280px;
+  width: 100%;
+  min-width: 0;
+  margin-left: 0;
 }
 .topbar {
   position: sticky;
@@ -1727,6 +1736,8 @@ tr:last-child td {
     justify-content: flex-start;
   }
   .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
     transform: translateX(-100%);
     transition: transform 0.2s ease;
   }
@@ -1811,5 +1822,282 @@ tr:last-child td {
   .form-grid.two {
     grid-template-columns: 1fr;
     gap: 0;
+  }
+}
+
+.app-shell {
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+  background: #080706;
+}
+
+.app-shell::before,
+.app-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.app-shell::before {
+  z-index: 0;
+  background: url("/images/boost-gym-bg.jpg") center / cover no-repeat;
+  filter: blur(5px) saturate(0.86);
+  transform: scale(1.035);
+}
+
+.app-shell::after {
+  z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(5, 5, 6, 0.78) 0%, rgba(7, 7, 8, 0.58) 42%, rgba(7, 7, 8, 0.7) 100%),
+    rgba(0, 0, 0, 0.42);
+}
+
+.app-shell .sidebar,
+.app-shell .main-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.app-shell .sidebar,
+.dark-mode .sidebar {
+  border-right-color: rgba(255, 255, 255, 0.14);
+  background: rgba(9, 10, 12, 0.46);
+  color: #fff;
+  box-shadow: 20px 0 70px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(18px);
+}
+
+.app-shell .brand-lockup {
+  margin-bottom: 34px;
+}
+
+.app-shell .brand-mark {
+  background: linear-gradient(135deg, #eda762, #ce7c3c);
+  color: #fff4e8;
+  box-shadow: 0 10px 28px rgba(237, 167, 98, 0.22);
+}
+
+.app-shell .brand-lockup strong,
+.app-shell .nav-section,
+.app-shell .nav-item,
+.app-shell .user-card strong,
+.app-shell .user-card small {
+  color: #d8a679;
+}
+
+.app-shell .nav-section {
+  margin-top: 12px;
+}
+
+.app-shell .nav-item {
+  min-height: 48px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #d7a579;
+}
+
+.app-shell .nav-item:hover,
+.app-shell .nav-item.active {
+  color: #f0bd8a;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.app-shell .logout-button {
+  width: 100%;
+  min-height: 48px;
+  margin: auto 0 54px;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.13);
+  color: #db8378;
+  backdrop-filter: blur(14px);
+}
+
+.app-shell .user-card {
+  margin-bottom: 0;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+}
+
+.app-shell .avatar {
+  background: linear-gradient(135deg, #e99955, #f0b477);
+  color: #fff;
+}
+
+.app-shell .avatar.mini {
+  width: 32px;
+  height: 32px;
+  font-size: 0.76rem;
+}
+
+.app-shell .topbar,
+.dark-mode .topbar {
+  justify-content: flex-end;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  background: rgba(7, 7, 8, 0.28);
+  backdrop-filter: blur(16px);
+}
+
+.app-shell .icon-button {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(11, 12, 14, 0.56);
+  color: #f3bd88;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.app-shell .icon-button svg,
+.app-shell .sidebar svg,
+.app-shell .nav-item svg,
+.app-shell .logout-button svg {
+  color: currentColor;
+}
+
+.app-shell .theme-toggle {
+  margin-left: auto;
+}
+
+.profile-pill {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px 5px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.11);
+  color: #fff1e4;
+  font-weight: 900;
+  backdrop-filter: blur(12px);
+}
+
+.content-shell::before,
+.content-shell::after,
+.dark-mode .content-shell::before,
+.dark-mode .content-shell::after {
+  display: none;
+}
+
+.app-shell .content-shell {
+  width: min(100%, 1120px);
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 18px 28px 28px;
+}
+
+.app-shell .content-shell > .page,
+.app-shell .content-shell > [class*="page"] {
+  width: 100%;
+  max-width: none;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.app-shell .main-shell {
+  width: 100%;
+  min-width: 0;
+  margin-left: 0;
+}
+
+.app-shell .topbar {
+  min-height: 58px;
+  padding: 8px 28px;
+}
+
+.app-shell .page-header {
+  margin-bottom: 18px;
+}
+
+.app-shell .stats-grid,
+.app-shell [class*="statsGrid"] {
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.app-shell .recommendation-hero,
+.app-shell [class*="hero"] {
+  margin-bottom: 18px;
+}
+
+.app-shell .content-shell :is(
+  .section,
+  .stat-card,
+  .detail-panel,
+  .state-panel,
+  .table-wrap,
+  article[class*="card"],
+  article[class*="Card"],
+  section[class*="card"],
+  section[class*="Card"],
+  section[class*="panel"],
+  section[class*="Panel"],
+  div[class*="_panel_"],
+  div[class*="_section_"],
+  a[class*="card"],
+  a[class*="Card"],
+  [class*="Item"],
+  [class*="item"]
+) {
+  border-color: var(--glass-border) !important;
+  background: var(--glass-card) !important;
+  box-shadow: var(--glass-shadow) !important;
+  backdrop-filter: blur(14px);
+}
+
+.app-shell .content-shell :is(
+  .section,
+  .stat-card,
+  .detail-panel,
+  .state-panel,
+  article[class*="card"],
+  article[class*="Card"],
+  section[class*="card"],
+  section[class*="Card"],
+  section[class*="panel"],
+  section[class*="Panel"],
+  div[class*="_panel_"],
+  div[class*="_section_"],
+  a[class*="card"],
+  a[class*="Card"],
+  [class*="Item"],
+  [class*="item"]
+):hover {
+  border-color: rgba(235, 235, 235, 0.3) !important;
+  background: var(--glass-card-hover) !important;
+}
+
+.app-shell .content-shell .stat-card,
+.app-shell .content-shell [class*="statCard"] {
+  border: 1px solid var(--glass-border) !important;
+  background: var(--glass-card) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+.app-shell .content-shell .stat-card::before,
+.app-shell .content-shell [class*="statCard"]::before {
+  background: rgba(210, 210, 210, 0.2) !important;
+}
+
+.app-shell .content-shell .stat-icon {
+  background: rgba(235, 235, 235, 0.88) !important;
+}
+
+@media (max-width: 860px) {
+  .app-shell {
+    display: block;
+  }
+
+  .app-shell .logout-button {
+    margin-top: auto;
+  }
+
+  .app-shell .content-shell {
+    width: 100%;
+    max-width: none;
+    padding: 18px 16px 24px;
   }
 }

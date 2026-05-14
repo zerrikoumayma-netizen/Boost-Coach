@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider.jsx";
 
 const navItems = [
@@ -54,9 +54,10 @@ function NavItem({ item, onClick }) {
 
 export default function AppLayout() {
   const [open, setOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const { session, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
+  const displayName = session?.username || "OUMAYMA";
 
   useEffect(() => {
     document.body.classList.toggle("dark-mode", darkMode);
@@ -90,11 +91,15 @@ export default function AppLayout() {
 
         <nav className="sidebar-nav">
           <span className="nav-section">Sport</span>
-          {navItems.map((item) => <NavItem key={item.to} item={item} onClick={() => setOpen(false)} />)}
+          {navItems.map((item) => (
+            <NavItem key={item.to} item={item} onClick={() => setOpen(false)} />
+          ))}
           {isAdmin ? (
             <>
               <span className="nav-section">Gestion</span>
-              {adminItems.map((item) => <NavItem key={item.to} item={item} onClick={() => setOpen(false)} />)}
+              {adminItems.map((item) => (
+                <NavItem key={item.to} item={item} onClick={() => setOpen(false)} />
+              ))}
             </>
           ) : null}
         </nav>
@@ -103,16 +108,14 @@ export default function AppLayout() {
           <LogOut size={18} />
           Déconnexion
         </button>
-        <br/>
-        <br/>
+
         <div className="user-card">
-          <span className="avatar">{session?.username?.slice(0, 2).toUpperCase() || "US"}</span>
+          <span className="avatar">{displayName.slice(0, 2).toUpperCase()}</span>
           <div>
-            <strong>{session?.username}</strong>
+            <strong>{displayName}</strong>
             <small>{session?.loyaltyPoints ?? 0} points fidélité</small>
           </div>
         </div>
-
       </aside>
 
       {open ? <button className="scrim" type="button" onClick={() => setOpen(false)} aria-label="Fermer le menu" /> : null}
@@ -130,7 +133,10 @@ export default function AppLayout() {
           >
             {darkMode ? <Sun size={19} /> : <Moon size={19} />}
           </button>
-          <div className="topbar-points">{session?.loyaltyPoints ?? 0} pts</div>
+          <Link className="profile-pill" to="/app/profile" aria-label="Ouvrir le profil">
+            <span className="avatar mini">{displayName.slice(0, 2).toUpperCase()}</span>
+            <strong>{displayName}</strong>
+          </Link>
         </header>
         <div className="content-shell">
           <Outlet />

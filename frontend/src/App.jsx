@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AdminRoute, ProtectedRoute } from "./auth/ProtectedRoute.jsx";
 // import AuthLayout from "./layouts/AuthLayout.jsx";
 import AppLayout from "./layouts/AppLayout.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
@@ -23,6 +24,7 @@ import AdminUsersPage from "./pages/admin/AdminUsersPage.jsx";
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
@@ -49,7 +51,6 @@ export default function App() {
         </Route>
       </Route>
 
-      <Route path="/" element={<Navigate to="/app" replace />} />
       <Route path="*" element={<Navigate to="/app" replace />} />
     </Routes>
   );

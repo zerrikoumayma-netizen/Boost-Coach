@@ -8,6 +8,13 @@ import { Badge, EmptyState, ErrorState, LoadingState, PageHeader } from "../comp
 import { getSessionExercises, getSessionsForProgram, getTotalSessionMinutes } from "./ProgramLaunchPage.jsx";
 import s from "../styles/ProgramsPage.module.css";
 
+const FALLBACK_IMAGE = "/images/boost-gym-bg.jpg";
+
+function useFallbackImage(event) {
+  if (event.currentTarget.src.endsWith(FALLBACK_IMAGE)) return;
+  event.currentTarget.src = FALLBACK_IMAGE;
+}
+
 export default function ProgramsPage() {
   const [filters, setFilters] = useState({ category: "", objective: "", level: "" });
 
@@ -100,12 +107,12 @@ export default function ProgramsPage() {
               0
             );
             const totalMinutes = getTotalSessionMinutes(sessions);
-            const coverSrc = program.coverImage || program.image || sessions[0]?.image;
+            const coverSrc = program.coverImage || program.image || sessions[0]?.image || FALLBACK_IMAGE;
 
             return (
               <article className={s.card} key={program.id}>
                 {coverSrc && (
-                  <img className={s.cardImage} src={coverSrc} alt={program.title} />
+                  <img className={s.cardImage} src={coverSrc} alt={program.title} onError={useFallbackImage} />
                 )}
                 <div className={s.cardBody}>
                   <div className={s.cardTopline}>

@@ -1,4 +1,4 @@
-import { AlertCircle, Lock, LogIn, User } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, Lock, User } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../api/authApi";
@@ -6,51 +6,56 @@ import { useAuth } from "../auth/AuthProvider.jsx";
 import s from "../styles/LoginPage.module.css";
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
- 
+
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
+    setError(null);
     setLoading(true);
+
     try {
-      const session = await login(form);
+      const session = await login({ username, password });
       signIn(session);
       navigate(location.state?.from?.pathname || "/app", { replace: true });
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Connexion impossible. Vérifiez vos identifiants.");
     } finally {
       setLoading(false);
     }
   }
- 
+
   return (
     <div className={s.shell}>
- 
-      <div className={s.visual}>
+      <section className={s.visual} aria-label="Boost Coach">
         <div className={s.logo}>
           <div className={s.logoMark}>BC</div>
           <span className={s.logoName}>Boost Coach</span>
         </div>
+
         <div className={s.visualBody}>
           <span className={s.visualKicker}>Plateforme sportive</span>
           <h2 className={s.visualTitle}>
-            Chaque séance<br />
-            compte. <em>Chaque</em><br />
-            <em>performance</em> aussi.
+            Dépassez vos limites.
+            <br />
+            Gardez le rythme.
           </h2>
           <p className={s.visualSub}>
-            Événements, coaching et équipements Decathlon —
-            tout pour progresser au quotidien.
+            Coaching, séances guidées et produits sportifs réunis dans un espace simple,
+            rapide et motivant.
           </p>
+
           <div className={s.metrics}>
             <div className={s.metric}>
               <span className={s.metricVal}>4.8k</span>
-              <span className={s.metricLbl}>Athlètes</span>
+              <span className={s.metricLbl}>Athletes</span>
             </div>
             <div className={s.metric}>
               <span className={s.metricVal}>320</span>
@@ -62,74 +67,93 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      </div>
- 
-      <div className={s.panel}>
+      </section>
+
+      <main className={s.panel}>
         <div className={s.formWrap}>
- 
           <div className={s.formHead}>
             <span className={s.eyebrow}>Connexion</span>
-            <h1>Accéder à votre espace</h1>
-            <p>Consultez votre catalogue, vos séances et votre profil.</p>
+            <h1>Bienvenue sur Boost Coach</h1>
+            <p>Connectez-vous pour retrouver vos séances, votre profil et vos produits.</p>
           </div>
- 
+
           <form onSubmit={handleSubmit}>
             <div className={s.fields}>
- 
               <div>
-                <label className={s.fieldLabel}>Nom Utilisateur</label>
+                <label className={s.fieldLabel} htmlFor="username">
+                  Username
+                </label>
                 <div className={s.inputRow}>
-                  <span className={s.inputIcon}><User size={15} /></span>
+                  <span className={s.inputIcon} aria-hidden="true">
+                    <User size={18} strokeWidth={1.9} />
+                  </span>
                   <input
-                    value={form.username}
-                    onChange={(e) => setForm({ ...form, username: e.target.value })}
-                    placeholder="votre_identifiant"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Votre identifiant"
                     autoComplete="username"
+                    disabled={loading}
                     required
                   />
                 </div>
               </div>
- 
+
               <div>
-                <label className={s.fieldLabel}>Mot de passe</label>
+                <label className={s.fieldLabel} htmlFor="password">
+                  Password
+                </label>
                 <div className={s.inputRow}>
-                  <span className={s.inputIcon}><Lock size={15} /></span>
+                  <span className={s.inputIcon} aria-hidden="true">
+                    <Lock size={18} strokeWidth={1.9} />
+                  </span>
                   <input
-                    type="password"
-                    value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    placeholder="••••••••"
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Votre mot de passe"
                     autoComplete="current-password"
+                    disabled={loading}
                     required
                   />
+                  <button
+                    className={s.passwordToggle}
+                    type="button"
+                    onClick={() => setShowPassword((value) => !value)}
+                    aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                    disabled={loading}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </div>
- 
             </div>
- 
+
             {error && (
-              <div className={s.alert}>
-                <AlertCircle size={14} />
-                {error}
+              <div className={s.alert} role="alert">
+                <AlertCircle size={16} />
+                <span>{error}</span>
               </div>
             )}
- 
+
             <button className={s.btn} type="submit" disabled={loading}>
-              {loading
-                ? <><span className={s.spinner} />Connexion…</>
-                : <><LogIn size={16} />Se connecter</>
-              }
+              {loading ? (
+                <>
+                  <span className={s.spinner} />
+                  Connexion en cours...
+                </>
+              ) : (
+                "Se connecter →"
+              )}
             </button>
           </form>
- 
+
           <p className={s.foot}>
-            Pas encore de compte ?{" "}
-            <Link to="/register">Créer un compte</Link>
+            Pas encore de compte ? <Link to="/register">Créer un compte</Link>
           </p>
- 
         </div>
-      </div>
- 
+      </main>
     </div>
   );
 }
