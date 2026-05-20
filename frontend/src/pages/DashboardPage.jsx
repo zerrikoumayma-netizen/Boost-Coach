@@ -1,4 +1,4 @@
-import { Boxes, CalendarCheck, HeartPulse, MapPin, Route, Sparkles, Trophy } from "lucide-react";
+import { CalendarCheck, HeartPulse, MapPin, Route, Sparkles, Trophy } from "lucide-react";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -13,19 +13,23 @@ import styles from "../styles/DashboardPage.module.css";
 
 export default function DashboardPage() {
   const { session } = useAuth();
-  const stats    = useQuery({ queryKey: ["sessionStats"], queryFn: getSessionStats });
+  const stats = useQuery({ queryKey: ["sessionStats"], queryFn: getSessionStats });
   const products = useQuery({ queryKey: ["products", "dashboard"], queryFn: () => getProducts({}) });
   const programs = useQuery({ queryKey: ["programs", "dashboard"], queryFn: () => getPrograms({}) });
-  const events   = useQuery({ queryKey: ["events", "upcoming"], queryFn: () => getEvents({ upcomingOnly: true }) });
-  const profile  = useQuery({ queryKey: ["profile", "dashboard"], queryFn: getProfile, retry: false });
- 
+  const events = useQuery({ queryKey: ["events", "upcoming"], queryFn: () => getEvents({ upcomingOnly: true }) });
+  const profile = useQuery({ queryKey: ["profile", "dashboard"], queryFn: getProfile, retry: false });
+
   const recommendationProfile = getRecommendationProfile({
     username: session?.username,
     ...(profile.data || {}),
   });
- 
+
   const recommendations = useMemo(
-    () => buildRecommendations(recommendationProfile, products.data || []),
+    () => buildRecommendations(recommendationProfile, {
+      products: products.data || [],
+      events: events.data || [],
+      programs: programs.data || [],
+    }),
     [
       recommendationProfile.city,
       recommendationProfile.hobby,
@@ -34,45 +38,44 @@ export default function DashboardPage() {
       recommendationProfile.objectives,
       recommendationProfile.budget,
       products.data,
+      events.data,
+      programs.data,
     ],
   );
- 
+
   const history = getRecommendationHistory();
- 
+  const profileTarget = recommendationProfile.objective || recommendationProfile.hobby || "ce profil";
+
   return (
     <div className={styles.page}>
-      {/* Ambient background mesh */}
       <div className={styles.bgMesh} aria-hidden="true" />
- 
-      {/* ── PAGE HEADER ── */}
+
       <div className={styles.header}>
         <PageHeader
           eyebrow="Tableau de bord"
-          title={`Bonjour ${session?.username || ""} 👋`}
-          description="Votre activité sportive, vos points et les raccourcis les plus utiles."
+          title={`Bonjour ${session?.username || ""}`}
+          description="Votre activite sportive, vos points et les raccourcis les plus utiles."
         />
       </div>
- 
-      {/* ── STATS ── */}
+
       <section className={styles.statsGrid}>
         <div className={styles.statCard}>
-          <StatCard icon={Trophy}       label="Points fidélité"    value={stats.data?.loyaltyPoints ?? session?.loyaltyPoints ?? 0} tone="green" />
+          <StatCard icon={Trophy} label="Points fidelite" value={stats.data?.loyaltyPoints ?? session?.loyaltyPoints ?? 0} tone="green" />
         </div>
         <div className={styles.statCard}>
-          <StatCard icon={CalendarCheck} label="Séances terminées"  value={stats.data?.completedSessions ?? 0} tone="blue" />
+          <StatCard icon={CalendarCheck} label="Seances terminees" value={stats.data?.completedSessions ?? 0} tone="blue" />
         </div>
         <div className={styles.statCard}>
-          <StatCard icon={HeartPulse}   label="Programmes actifs"  value={programs.data?.length ?? "-"} tone="red" />
+          <StatCard icon={HeartPulse} label="Programmes actifs" value={programs.data?.length ?? "-"} tone="red" />
         </div>
       </section>
- 
-      {/* ── RECOMMENDATION HERO ── */}
+
       <section className={styles.hero}>
         <div>
           <span className="eyebrow">Moteur intelligent</span>
           <h2>Recommandations Decathlon Maroc</h2>
           <p>
-            {recommendationProfile.city || "Maroc"} · {recommendationProfile.hobby || "Fitness"} · budget{" "}
+            {recommendationProfile.city || "Maroc"} - {recommendationProfile.hobby || "Fitness"} - budget{" "}
             {recommendationProfile.budget || 0} MAD
           </p>
         </div>
@@ -81,15 +84,12 @@ export default function DashboardPage() {
           <span>meilleur match</span>
         </div>
       </section>
- 
-      {/* ── RECOMMENDATION GRID ── */}
+
       <section className={styles.recoGrid}>
- 
-        {/* Products — wide */}
         <div className={`${styles.panel} ${styles.wideReco}`}>
           <div className={styles.panelTitleRow}>
-            <h2>Produits adaptés</h2>
-            <Link to="/app/products">Voir catalogue →</Link>
+            <h2>Produits adaptes</h2>
+            <Link to="/app/products">Voir catalogue -></Link>
           </div>
           <div className={styles.productRecoGrid}>
             {recommendations.products.map((product) => (
@@ -97,7 +97,9 @@ export default function DashboardPage() {
                 {product.image && <img src={product.image} alt={product.name} />}
                 <div className={styles.productRecoCardBody}>
                   <div className={styles.cardTopline}>
-                    <Badge tone="green">{product.badge}</Badge>
+                    <Badge tone={product.alternative ? "blue" : "green"}>
+                      {product.alternative ? "Alternative" : product.badge}
+                    </Badge>
                     <span className={styles.matchScore}>
                       <Sparkles size={14} />
                       {product.score}%
@@ -109,31 +111,49 @@ export default function DashboardPage() {
                 </div>
               </article>
             ))}
-            {!recommendations.products.length && <EmptyState title="Aucun produit disponible" />}
+            {!recommendations.products.length && (
+              <EmptyState
+                title="Aucun produit adapte"
+                description={`Essayez d'elargir le budget ou le loisir ${recommendationProfile.hobby || "sportif"}.`}
+              />
+            )}
           </div>
         </div>
- 
-        {/* Events */}
+
         <div className={styles.panel}>
           <div className={styles.panelTitleRow}>
-            <h2>Événements proches</h2>
-            <Link to="/app/events">Voir →</Link>
+            <h2>Evenements proches</h2>
+            <Link to="/app/events">Voir -></Link>
           </div>
           <div className={styles.recoList}>
             {recommendations.events.map((event) => (
               <article className={styles.recoListItem} key={event.id}>
-                <img src={event.image} alt={event.name} />
+                {event.image ? (
+                  <img src={event.image} alt={event.title} />
+                ) : (
+                  <div className={styles.eventPlaceholder} aria-hidden="true">
+                    {event.type?.slice(0, 2).toUpperCase() || "EV"}
+                  </div>
+                )}
                 <div>
-                  <strong>{event.name}</strong>
-                  <span>{event.city} · {event.sport}</span>
-                  <small>{formatDate(event.date)}</small>
+                  <strong>{event.title}</strong>
+                  <span>{event.city} - {event.type}</span>
+                  <small>
+                    {formatDate(event.date)}
+                    {event.alternative ? " - alternative" : ""}
+                  </small>
                 </div>
               </article>
             ))}
+            {!recommendations.events.length && (
+              <EmptyState
+                title="Aucun evenement proche adapte"
+                description={`Aucune date ne correspond a ${profileTarget}.`}
+              />
+            )}
           </div>
         </div>
- 
-        {/* Nearest Store */}
+
         <div className={styles.panel}>
           <div className={styles.panelTitleRow}>
             <h2>Magasin proche</h2>
@@ -142,7 +162,7 @@ export default function DashboardPage() {
             <MapPin size={22} color="var(--blue)" />
             <strong>{recommendations.nearestStore.name}</strong>
             <span>{recommendations.nearestStore.address}</span>
-            <em>📍 {recommendations.nearestStore.distance} km</em>
+            <em>{recommendations.nearestStore.distance} km</em>
             <a
               className={styles.storeDirectionBtn}
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(recommendations.nearestStore.address)}`}
@@ -150,12 +170,11 @@ export default function DashboardPage() {
               rel="noreferrer"
             >
               <Route size={15} />
-              Itinéraire
+              Itineraire
             </a>
           </div>
         </div>
- 
-        {/* History */}
+
         <div className={styles.panel}>
           <div className={styles.panelTitleRow}>
             <h2>Historique</h2>
@@ -164,23 +183,19 @@ export default function DashboardPage() {
             {history.slice(0, 3).map((item) => (
               <div className={styles.historyItem} key={item.createdAt}>
                 <strong>{item.profile?.hobby || "Profil sportif"}</strong>
-                <span>{item.products?.length || 0} produits · {formatDate(item.createdAt)}</span>
+                <span>{item.products?.length || 0} produits - {formatDate(item.createdAt)}</span>
               </div>
             ))}
             {!history.length && <EmptyState title="Aucun historique" />}
           </div>
         </div>
- 
       </section>
- 
-      {/* ── BOTTOM DASHBOARD GRID ── */}
+
       <div className={styles.dashGrid}>
- 
-        {/* Programs */}
         <section className={styles.panel}>
           <div className={styles.panelTitleRow}>
-            <h2>Programmes à essayer</h2>
-            <Link to="/app/programs">Voir tout →</Link>
+            <h2>Programmes a essayer</h2>
+            <Link to="/app/programs">Voir tout -></Link>
           </div>
           {programs.isLoading ? (
             <LoadingState />
@@ -188,25 +203,31 @@ export default function DashboardPage() {
             <ErrorState error={programs.error} />
           ) : (
             <div className={styles.stackList}>
-              {(programs.data || []).slice(0, 3).map((program) => (
+              {recommendations.programs.map((program) => (
                 <Link className={styles.compactCard} to="/app/programs" key={program.id}>
                   <div>
                     <strong>{program.title}</strong>
-                    <span>{program.category} · {program.durationWeeks} semaines</span>
+                    <span>{program.category} - {program.durationWeeks} semaines</span>
                   </div>
-                  <Badge tone="green">{program.level}</Badge>
+                  <Badge tone={program.alternative ? "blue" : "green"}>
+                    {program.alternative ? "Alternative" : program.level}
+                  </Badge>
                 </Link>
               ))}
-              {!programs.data?.length && <EmptyState title="Aucun programme" />}
+              {!recommendations.programs.length && (
+                <EmptyState
+                  title="Aucun programme adapte"
+                  description={`Ajoutez un objectif comme ${recommendationProfile.hobby || "fitness"} ou changez le niveau.`}
+                />
+              )}
             </div>
           )}
         </section>
- 
-        {/* Events */}
+
         <section className={styles.panel}>
           <div className={styles.panelTitleRow}>
-            <h2>Événements à venir</h2>
-            <Link to="/app/events">Voir tout →</Link>
+            <h2>Evenements a venir</h2>
+            <Link to="/app/events">Voir tout -></Link>
           </div>
           {events.isLoading ? (
             <LoadingState />
@@ -214,25 +235,31 @@ export default function DashboardPage() {
             <ErrorState error={events.error} />
           ) : (
             <div className={styles.stackList}>
-              {(events.data || []).slice(0, 3).map((event) => (
+              {recommendations.upcomingEvents.map((event) => (
                 <Link className={styles.compactCard} to="/app/events" key={event.id}>
                   <div>
                     <strong>{event.title}</strong>
-                    <span>{event.city} · {formatDate(event.eventDate)}</span>
+                    <span>{event.city} - {formatDate(event.date)}</span>
                   </div>
-                  <Badge>{event.type}</Badge>
+                  <Badge tone={event.alternative ? "blue" : "green"}>
+                    {event.alternative ? "Alternative" : event.type}
+                  </Badge>
                 </Link>
               ))}
-              {!events.data?.length && <EmptyState title="Aucun événement à venir" />}
+              {!recommendations.upcomingEvents.length && (
+                <EmptyState
+                  title="Aucun evenement a venir adapte"
+                  description={`Aucune sortie ne correspond a ${profileTarget}.`}
+                />
+              )}
             </div>
           )}
         </section>
- 
-        {/* Quick catalog — full width */}
+
         <section className={`${styles.panel} ${styles.dashGridWide}`}>
           <div className={styles.panelTitleRow}>
             <h2>Catalogue rapide</h2>
-            <Link to="/app/products">Explorer →</Link>
+            <Link to="/app/products">Explorer -></Link>
           </div>
           {products.isLoading ? (
             <LoadingState />
@@ -240,17 +267,22 @@ export default function DashboardPage() {
             <ErrorState error={products.error} />
           ) : (
             <div className={styles.miniProductGrid}>
-              {(products.data || []).slice(0, 4).map((product) => (
+              {recommendations.quickCatalog.map((product) => (
                 <Link className={styles.miniProduct} to={`/app/products/${product.id}`} key={product.id}>
                   <strong>{product.name}</strong>
                   <span>{product.category}</span>
                   <em>{formatPrice(product.price)}</em>
                 </Link>
               ))}
+              {!recommendations.quickCatalog.length && (
+                <EmptyState
+                  title="Aucun article adapte"
+                  description={`Le catalogue ne contient pas encore d'article pour ${recommendationProfile.hobby || "ce profil"}.`}
+                />
+              )}
             </div>
           )}
         </section>
- 
       </div>
     </div>
   );

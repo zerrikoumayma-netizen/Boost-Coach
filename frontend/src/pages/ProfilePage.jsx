@@ -43,8 +43,11 @@ export default function ProfilePage() {
 
   const mutation = useMutation({
     mutationFn: (payload) => saveProfile(payload),
-    onSuccess: () => {
+    onSuccess: (savedProfile) => {
       setMessage("Profil mis à jour.");
+      saveRecommendationProfile(savedProfile);
+      queryClient.setQueryData(["profile"], savedProfile);
+      queryClient.setQueryData(["profile", "dashboard"], savedProfile);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
@@ -60,7 +63,6 @@ export default function ProfilePage() {
       budget:     Number(form.budget),
       objectives: form.objectives.split(",").map((v) => v.trim()).filter(Boolean),
     };
-    saveRecommendationProfile(payload);
     mutation.mutate(payload);
   }
 
