@@ -16,10 +16,10 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>decathlon_project</artifactId>
+    <artifactId>boostcoach_project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>decathlon_project</name>
-    <description>Backend Decathlon Project</description>
+    <name>boostcoach_project</name>
+    <description>Backend BoostCoach Project</description>
 
     <properties>
         <java.version>21</java.version>

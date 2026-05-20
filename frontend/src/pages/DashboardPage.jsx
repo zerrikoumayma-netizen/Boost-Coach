@@ -73,7 +73,7 @@ export default function DashboardPage() {
       <section className={styles.hero}>
         <div>
           <span className="eyebrow">Moteur intelligent</span>
-          <h2>Recommandations Decathlon Maroc</h2>
+          <h2>Recommandations BoostCoach Maroc</h2>
           <p>
             {recommendationProfile.city || "Maroc"} - {recommendationProfile.hobby || "Fitness"} - budget{" "}
             {recommendationProfile.budget || 0} MAD

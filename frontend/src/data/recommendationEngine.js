@@ -34,12 +34,12 @@ export const sportHobbies = [
 ];
 
 const stores = [
-  { city: "Casablanca", name: "Decathlon Casablanca Ain Sebaa", address: "Route de Rabat, Ain Sebaa, Casablanca", distance: 4.2 },
-  { city: "Rabat", name: "Decathlon Rabat Hay Riad", address: "Avenue Annakhil, Rabat", distance: 3.5 },
-  { city: "Marrakech", name: "Decathlon Marrakech", address: "Route de Casablanca, Marrakech", distance: 5.1 },
-  { city: "Agadir", name: "Decathlon Agadir", address: "Zone commerciale Founty, Agadir", distance: 4.8 },
-  { city: "Tanger", name: "Decathlon Tanger", address: "Route de Tetouan, Tanger", distance: 6.4 },
-  { city: "Fes", name: "Decathlon Fes", address: "Centre commercial Borj Fes", distance: 5.9 },
+  { city: "Casablanca", name: "BoostCoach Casablanca Ain Sebaa", address: "Route de Rabat, Ain Sebaa, Casablanca", distance: 4.2 },
+  { city: "Rabat", name: "BoostCoach Rabat Hay Riad", address: "Avenue Annakhil, Rabat", distance: 3.5 },
+  { city: "Marrakech", name: "BoostCoach Marrakech", address: "Route de Casablanca, Marrakech", distance: 5.1 },
+  { city: "Agadir", name: "BoostCoach Agadir", address: "Zone commerciale Founty, Agadir", distance: 4.8 },
+  { city: "Tanger", name: "BoostCoach Tanger", address: "Route de Tetouan, Tanger", distance: 6.4 },
+  { city: "Fes", name: "BoostCoach Fes", address: "Centre commercial Borj Fes", distance: 5.9 },
 ];
 
 export function saveRecommendationProfile(profile) {

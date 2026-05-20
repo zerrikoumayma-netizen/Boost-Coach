@@ -1,4 +1,4 @@
-# Decathlon Sport Buddy Frontend
+# BoostCoach Sport Buddy Frontend
 
 React JSX frontend for the Spring Boot backend.
 

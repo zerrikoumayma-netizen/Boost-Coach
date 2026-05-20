@@ -1,4 +1,4 @@
-# Documentation technique complète - Decathlon Sport Buddy
+# Documentation technique complète - BoostCoach Sport Buddy
 
 ## 1. Vue générale du projet
 
@@ -7,10 +7,10 @@
 | Élément | Valeur constatée dans le projet |
 |---|---|
 | Nom du dépôt | `projet_sport` |
-| Nom backend Maven | `decathlon_project` |
-| Nom applicatif Spring | `decathlon-sport-buddy` |
-| Nom frontend npm | `decathlon-sport-buddy-frontend` |
-| Domaine fonctionnel | Coaching sportif, catalogue Decathlon, événements sportifs, recommandations, administration |
+| Nom backend Maven | `boostcoach_project` |
+| Nom applicatif Spring | `boostcoach-sport-buddy` |
+| Nom frontend npm | `boostcoach-sport-buddy-frontend` |
+| Domaine fonctionnel | Coaching sportif, catalogue BoostCoach, événements sportifs, recommandations, administration |
 | Type d’application | Application web full-stack conteneurisée |
 
 Le projet est structuré comme un monorepo:
@@ -27,7 +27,7 @@ projet_sport-main/
 
 ### 1.2 Objectif de l’application
 
-L’application sert de compagnon sportif orienté Decathlon. Elle permet à un utilisateur de créer un compte, renseigner un profil sportif, consulter des produits, suivre des programmes d’entraînement, démarrer et terminer des séances, obtenir des recommandations côté frontend et consulter des événements sportifs importés.
+L’application sert de compagnon sportif orienté BoostCoach. Elle permet à un utilisateur de créer un compte, renseigner un profil sportif, consulter des produits, suivre des programmes d’entraînement, démarrer et terminer des séances, obtenir des recommandations côté frontend et consulter des événements sportifs importés.
 
 Le back-office administrateur permet de consulter des statistiques globales, gérer les produits, les programmes, les événements et explorer certaines tables de données importées.
 
@@ -242,13 +242,13 @@ sequenceDiagram
 
 ### 3.1 Classe principale
 
-La classe `DecathlonProjectApplication` porte `@SpringBootApplication`. Cette annotation combine:
+La classe `BoostCoachProjectApplication` porte `@SpringBootApplication`. Cette annotation combine:
 
 | Annotation implicite | Rôle |
 |---|---|
 | `@Configuration` | Déclare une source de beans |
 | `@EnableAutoConfiguration` | Active l’auto-configuration Spring Boot |
-| `@ComponentScan` | Scanne le package `com.example.decathlon_project` |
+| `@ComponentScan` | Scanne le package `com.example.boostcoach_project` |
 
 Flux de démarrage:
 
@@ -690,7 +690,7 @@ Sorties:
 | `events` | Jusqu’à 4 événements |
 | `programs` | Jusqu’à 3 programmes |
 | `quickCatalog` | Sélection courte |
-| `nearestStore` | Magasin Decathlon local prédéfini |
+| `nearestStore` | Magasin BoostCoach local prédéfini |
 | `hasExactMatches` | Indique si des recommandations exactes ont été trouvées |
 
 ### 7.3 Scoring produit
@@ -1102,7 +1102,7 @@ Le projet contient un seul test:
 
 ```java
 @SpringBootTest
-class DecathlonProjectApplicationTests {
+class BoostCoachProjectApplicationTests {
     @Test
     void contextLoads() {
     }
@@ -1166,7 +1166,7 @@ flowchart LR
 
 ## 17. Conclusion
 
-Decathlon Sport Buddy est une application web cohérente, orientée coaching sportif et catalogue Decathlon, construite autour d’un backend Spring Boot sécurisé par JWT, d’un frontend React moderne et d’une base MySQL riche en données importées.
+BoostCoach Sport Buddy est une application web cohérente, orientée coaching sportif et catalogue BoostCoach, construite autour d’un backend Spring Boot sécurisé par JWT, d’un frontend React moderne et d’une base MySQL riche en données importées.
 
 Le cœur applicatif est proprement séparé en couches et déjà exploitable localement via Docker Compose. Les principaux axes de professionnalisation concernent la sécurité d’autorisation fine, la gestion des secrets, l’industrialisation CI/CD, la couverture de tests et la normalisation des données importées.
 

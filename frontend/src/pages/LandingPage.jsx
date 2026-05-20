@@ -66,7 +66,7 @@ export default function LandingPage() {
         </h1>
 
         <p className={s.subtitle}>
-          Coaching personnalisé, séances guidées et équipements Decathlon — tout pour
+          Coaching personnalisé, séances guidées et équipements BoostCoach — tout pour
           franchir vos limites au quotidien.
         </p>
 

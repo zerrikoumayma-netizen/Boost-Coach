@@ -67,7 +67,7 @@ export default function ProductsPage() {
       <div className={s.header}>
         <PageHeader
           eyebrow="Catalogue"
-          title="Produits Decathlon"
+          title="Produits BoostCoach"
           description="Recherchez un produit, vérifiez le stock par ville et gardez vos favoris."
         />
       </div>
